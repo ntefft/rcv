@@ -141,7 +141,7 @@
     \def\gt{>}
     \def\lt{<}
     % Document parameters
-    \title{maine congressional district 2 rcv replication}
+    \title{maine congressional district 2 rcv selected tabulations}
     
     
     
@@ -281,18 +281,12 @@
 
     
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}1}]:} \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} Maine Congressional District 2 (2018) Ranked Choice Voting Replication}
-        \PY{c+c1}{\PYZsh{} by Nathan Tefft, Ph.D., 11/29/2018}
-        \PY{c+c1}{\PYZsh{} This notebook uses an open source platform to replicate the Maine Congressional District 2 ranked choice voting results certified to the Governor on 11/26/18 (obtained from https://www.maine.gov/sos/cec/elec/results/results18.html\PYZsh{}Nov6).}
-        \PY{c+c1}{\PYZsh{} The replication implements the rank\PYZhy{}choiced voting rules as provided in 21\PYZhy{}A M.R.S.A. Chapter 723\PYZhy{}A, sub\PYZhy{}chapter 1, described at https://www.maine.gov/sos/cec/elec/upcoming/pdf/250rcvnew.pdf}
-        \PY{c+c1}{\PYZsh{} Although the rules allow for a \PYZdq{}batch elimination\PYZdq{} based on mathematical impossibility (used by the Secretary of State\PYZsq{}s office), I simply run subsequent instant runoffs to demonstrate the equivalence of the two approaches}
-        \PY{c+c1}{\PYZsh{} The replication was specifically written for the Maine Congressional District 2 race (2018), so it would need to be modified to replicate other races}
-        \PY{c+c1}{\PYZsh{} The code may not be particularly efficient, and I hope to one day improve its efficiency, but it transparently implements the process for those familiar with the Python language}
+{\color{incolor}In [{\color{incolor}1}]:} \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} Maine Congressional District 2 (2018) Ranked Choice Voting Tabulations}
+        \PY{c+c1}{\PYZsh{} by Nathan Tefft, Ph.D., 12/3/2018}
+        \PY{c+c1}{\PYZsh{} This notebook uses an open source platform to present selected tabulations from the Maine Congressional District 2 ranked choice ballots (obtained from https://www.maine.gov/sos/cec/elec/results/results18.html\PYZsh{}Nov6).}
         
+        \PY{c+c1}{\PYZsh{} Import packages data manipulation (pandas)}
         
-        \PY{c+c1}{\PYZsh{} Import packages for mathematical operations (numpy) and data manipulation (pandas)}
-        
-        \PY{k+kn}{import} \PY{n+nn}{numpy}
         \PY{k+kn}{import} \PY{n+nn}{pandas}
 \end{Verbatim}
 
@@ -352,200 +346,71 @@
 \end{Verbatim}
             
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}6}]:} \PY{c+c1}{\PYZsh{} Tabulate the raw percents of first round choices}
+{\color{incolor}In [{\color{incolor}6}]:} \PY{c+c1}{\PYZsh{} Tabulation of 2nd choices for ballots that mark Hoar as 1st choice}
         
-        \PY{l+m+mi}{100}\PY{o}{*}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{o}{/}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
+        \PY{n}{choices}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Hoar, William R.S.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}6}]:} REP Poliquin, Bruce     45.256133
-        DEM Golden, Jared F.    44.522877
-        Bond, Tiffany L.         5.544166
-        Hoar, William R.S.       2.290620
-        undervote                2.242998
-        overvote                 0.143206
-        Name: 1, dtype: float64
+{\color{outcolor}Out[{\color{outcolor}6}]:} Bond, Tiffany L.        2535
+        undervote               2061
+        DEM Golden, Jared F.    1172
+        REP Poliquin, Bruce      864
+        Hoar, William R.S.       134
+        overvote                  16
+        Name: 2, dtype: int64
 \end{Verbatim}
             
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}7}]:} \PY{c+c1}{\PYZsh{} Before conducting the first instant runoff, implement rules regarding missing and multiple votes per rank (as provided in 21\PYZhy{}A M.R.S.A. Chapter 723\PYZhy{}A, sub\PYZhy{}chapter 1, described at https://www.maine.gov/sos/cec/elec/upcoming/pdf/250rcvnew.pdf)}
-        \PY{c+c1}{\PYZsh{} Two consecutive skipped rankings: When a voter does not mark two or more consecutive rankings, then the ballot is deemed exhausted for that contest, and no subsequent candidate rankings on that ballot are counted}
+{\color{incolor}In [{\color{incolor}7}]:} \PY{c+c1}{\PYZsh{} Tabulation of 3rd choices for ballots that mark Hoar as 1st choice and Bond as 2nd choice}
         
-        \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-        \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{o}{|} \PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-        \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{5}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{o}{|} \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{o}{|} \PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{5}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+        \PY{n}{choices}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Hoar, William R.S.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Bond, Tiffany L.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}7}]:} DEM Golden, Jared F.    1266
+        REP Poliquin, Bruce      673
+        undervote                552
+        Hoar, William R.S.        35
+        overvote                   8
+        Bond, Tiffany L.           1
+        Name: 3, dtype: int64
+\end{Verbatim}
+            
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}8}]:} \PY{c+c1}{\PYZsh{} An overvote (when a voter marks more than one candidate for the same ranking) invalidates the overvoted rankings and all subsequent rankings marked for that contest on the ballot.}
+{\color{incolor}In [{\color{incolor}8}]:} \PY{c+c1}{\PYZsh{} Tabulation of 2nd choices for ballots that mark Bond as 1st choice}
         
-        \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{overvote|invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-        \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{overvote|invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-        \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{overvote|invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-        \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{5}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{overvote|invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{5}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+        \PY{n}{choices}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Bond, Tiffany L.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}8}]:} Hoar, William R.S.      5470
+        DEM Golden, Jared F.    4760
+        undervote               4281
+        REP Poliquin, Bruce     1595
+        Bond, Tiffany L.         275
+        overvote                  34
+        Name: 2, dtype: int64
+\end{Verbatim}
+            
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}9}]:} \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} FIRST ROUND (ZERO RUNOFF)}
-        \PY{c+c1}{\PYZsh{} Being with the \PYZdq{}zero\PYZdq{} runoff, which tallies the first choice, moving to the second choice if there is a single undervote, according to the \PYZdq{}single skipped ranking\PYZdq{} rule}
-        \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}9}]:} \PY{c+c1}{\PYZsh{} Tabulation of 3rd choices for ballots that mark Bond as 1st choice and Hoar as 2nd choice}
         
-        \PY{c+c1}{\PYZsh{} Tabulate all ballot statuses after this runoff}
-        \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
+        \PY{n}{choices}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Bond, Tiffany L.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Hoar, William R.S.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}9}]:} REP Poliquin, Bruce     134184
-        DEM Golden, Jared F.    132013
-        Bond, Tiffany L.         16552
-        Hoar, William R.S.        6875
-        undervote                 6018
-        overvote                   435
-        Name: runoff0, dtype: int64
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}10}]:} \PY{c+c1}{\PYZsh{} Mark ballots that are counted in this runoff as \PYZdq{}continuing\PYZdq{}}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{continuing0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{o}{\PYZti{}}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isin}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{exhausted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{overvote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} Total of ballots that are counted in this runoff}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{continuing0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}10}]:} True     289624
-         False      6453
-         Name: continuing0, dtype: int64
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}11}]:} \PY{c+c1}{\PYZsh{} Calculate and display percents of vote for each candidate among ballots counted in this runoff}
-         \PY{n}{counts0} \PY{o}{=} \PY{n}{choices}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{continuing0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
-         \PY{l+m+mi}{100}\PY{o}{*}\PY{n}{counts0}\PY{o}{/}\PY{n}{counts0}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}11}]:} REP Poliquin, Bruce     46.330415
-         DEM Golden, Jared F.    45.580822
-         Bond, Tiffany L.         5.714996
-         Hoar, William R.S.       2.373767
-         Name: runoff0, dtype: float64
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}12}]:} \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} FIRST AUTOMATIC RUNOFF}
-         \PY{c+c1}{\PYZsh{} Using the results from the first round, eliminate the last place vote\PYZhy{}getter by assigning their voters\PYZsq{} next\PYZhy{}highest ranked choice, according to the rules referenced above}
-         
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote|Hoar, William R.S.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote|Hoar, William R.S.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote|Hoar, William R.S.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote|Hoar, William R.S.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{5}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Hoar, William R.S.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{exhausted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} Tabulate all ballot statuses after this runoff}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}12}]:} REP Poliquin, Bruce     135073
-         DEM Golden, Jared F.    133216
-         Bond, Tiffany L.         19173
-         invalidated               8056
-         overvote                   456
-         exhausted                   94
-         undervote                    9
-         Name: runoff1, dtype: int64
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}13}]:} \PY{c+c1}{\PYZsh{} Mark ballots that are counted in this runoff as \PYZdq{}continuing\PYZdq{}}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{continuing1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{o}{\PYZti{}}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isin}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{exhausted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{overvote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} Total of ballots that are counted in this runoff}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{continuing1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}13}]:} True     287462
-         False      8615
-         Name: continuing1, dtype: int64
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}14}]:} \PY{c+c1}{\PYZsh{} Calculate and display percents of vote for each candidate among ballots counted in this runoff}
-         \PY{n}{counts1} \PY{o}{=} \PY{n}{choices}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{continuing1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
-         \PY{l+m+mi}{100}\PY{o}{*}\PY{n}{counts1}\PY{o}{/}\PY{n}{counts1}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}14}]:} REP Poliquin, Bruce     46.988124
-         DEM Golden, Jared F.    46.342125
-         Bond, Tiffany L.         6.669751
-         Name: runoff1, dtype: float64
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}15}]:} \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} SECOND AUTOMATIC RUNOFF}
-         \PY{c+c1}{\PYZsh{} Using the results from the first runoff, eliminate the last place vote\PYZhy{}getter by assigning their voters\PYZsq{} next\PYZhy{}highest ranked choice, according to the rules referenced above}
-         
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote|Hoar, William R.S.|Bond, Tiffany L.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote|Hoar, William R.S.|Bond, Tiffany L.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote|Hoar, William R.S.|Bond, Tiffany L.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote|Hoar, William R.S.|Bond, Tiffany L.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{5}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{numpy}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{contains}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Hoar, William R.S.|Bond, Tiffany L.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{exhausted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} Tabulate all ballot statuses after this runoff}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}15}]:} DEM Golden, Jared F.    142440
-         REP Poliquin, Bruce     138931
-         invalidated              13745
-         overvote                   533
-         exhausted                  342
-         undervote                   86
-         Name: runoff2, dtype: int64
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}16}]:} \PY{c+c1}{\PYZsh{} Mark ballots that are counted in this runoff as \PYZdq{}continuing\PYZdq{}}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{continuing2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{o}{\PYZti{}}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isin}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{exhausted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{overvote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{undervote}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{invalidated}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} Total of ballots that are counted in this runoff}
-         \PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{continuing2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}16}]:} True     281371
-         False     14706
-         Name: continuing2, dtype: int64
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}17}]:} \PY{c+c1}{\PYZsh{} Calculate and display percents of vote for each candidate among ballots counted in this runoff}
-         \PY{n}{counts2} \PY{o}{=} \PY{n}{choices}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{choices}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{continuing2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{runoff2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}
-         \PY{l+m+mi}{100}\PY{o}{*}\PY{n}{counts2}\PY{o}{/}\PY{n}{counts2}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}17}]:} DEM Golden, Jared F.    50.623554
-         REP Poliquin, Bruce     49.376446
-         Name: runoff2, dtype: float64
+{\color{outcolor}Out[{\color{outcolor}9}]:} DEM Golden, Jared F.    2793
+        REP Poliquin, Bruce     1325
+        undervote               1274
+        Bond, Tiffany L.          40
+        overvote                  21
+        Hoar, William R.S.        17
+        Name: 3, dtype: int64
 \end{Verbatim}
             
 
