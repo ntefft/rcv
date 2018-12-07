@@ -8,6 +8,6 @@ The replication implements the rank-choiced voting rules as provided in 21-A M.R
 
 Although the rules allow for a "batch elimination" based on mathematical impossibility (used by the Secretary of State's office), I simply run subsequent instant runoffs to demonstrate the equivalence of the two approaches.
 
-The replication was specifically written for the Maine Congressional District 2 race (2018), so it would need to be modified to replicate other races.
+The replication notebook was specifically written for the Maine Congressional District 2 race (2018), so it would need to be modified to replicate other races.
 
-The code may not be particularly efficient, and I hope to one day improve its efficiency, but it transparently implements the process for those familiar with the Python language.
+12/4/2018 UPDATE: I added the python script replicate_rcv.py to the project. The script should be run in the same directory with the Excel files containing the ranked-choice ballots. While the above notebook demonstrates the Maine Congressional District 2 race (2018) replication, this script generalizes the replication process in order to allow for easy replications of all future ranked-choice voting races (only the Excel file importation process need be adjusted for future races).
