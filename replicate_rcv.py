@@ -58,16 +58,17 @@ while not finished:
     print('\n***Tabulation of ballot statuses')
     tally = runoffs[n].value_counts()
     print(tally)
-    print('\n***Percents of votes among live candidates')
+    print('\n***Percents of votes among continuing candidates')
     percents = 100*tally[~tally.index.str.contains('exhausted|overvote|undervote|invalidated')]/tally[~tally.index.str.contains('exhausted|overvote|undervote|invalidated')].sum()
     print(percents)
-    
-    finished = percents[0] > 50
+
+#In the final round, when only 2 continuing candidates remain, the candidate with the most votes in that round is the winning candidate.    
+    finished = percents.count() == 2
     
     if not finished:    
         eliminated.append(''.join(tally[~tally.index.str.contains('exhausted|overvote|undervote|invalidated')][[-1]].index.format()))
         n+=1
     else:
-        print('\n********\n' + tally.index[0].format() + ' has passed the 50% threshold')
+        print('\n********\n' + tally.index[0].format() + ' is the winner.')
 
 
